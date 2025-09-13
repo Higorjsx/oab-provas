@@ -1,12 +1,8 @@
 {
-  "name": "boilerplate-frontend",
+  "name": "oab-provas",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Boilerplate para projetos React utilizando o Vite",
-  "repository": "https://github.com/higordevv/boilerplate-frontend",
-  "license": "MIT",
-  "author": "Higor Santos <higorkk@icloud.com.br>",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
