@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type JSX } from 'react'
-
+import { motion, AnimatePresence } from 'framer-motion'
 interface Exam {
   nome: string
   ano: string
@@ -48,7 +48,7 @@ export default function App(): JSX.Element {
         return (
           item.nome.toLowerCase().includes(q) ||
           item.ano.toLowerCase().includes(q) ||
-          item.instituicao.toLowerCase().includes(q)
+          -item.instituicao.toLowerCase().includes(q)
         )
       })
       .sort((a, b) => Number(b.ano) - Number(a.ano))
@@ -133,49 +133,55 @@ export default function App(): JSX.Element {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filtered.map((item, i) => (
-              <article
-                key={item.nome}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="font-semibold text-gray-800 dark:text-gray-100 break-words">
-                      {capitalizeWords(item.nome.replace(/-/g, ' '))}
-                    </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      {item.instituicao} • {item.ano}
-                    </p>
+            <AnimatePresence>
+              {filtered.map((item, i) => (
+                <motion.article
+                  key={item.nome}
+                  layout
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-300"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 className="font-semibold text-gray-800 dark:text-gray-100 break-words">
+                        {capitalizeWords(item.nome.replace(/-/g, ' '))}
+                      </h2>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {item.instituicao} • {item.ano}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="inline-block bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">
+                        {item.ano}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <span className="inline-block bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">
-                      {item.ano}
-                    </span>
+
+                  <div className="mt-4 flex gap-2">
+                    <a
+                      href={normalizePath(item.prova)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-800 dark:text-gray-200"
+                    >
+                      Abrir Prova
+                    </a>
+
+                    <a
+                      href={normalizePath(item.gabarito)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition"
+                    >
+                      Gabarito
+                    </a>
                   </div>
-                </div>
-
-                <div className="mt-4 flex gap-2">
-                  <a
-                    href={normalizePath(item.prova)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-800 dark:text-gray-200"
-                  >
-                    Abrir Prova
-                  </a>
-
-                  <a
-                    href={normalizePath(item.gabarito)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition"
-                  >
-                    Gabarito
-                  </a>
-                </div>
-              </article>
-            ))}
+                </motion.article>
+              ))}
+            </AnimatePresence>
           </div>
         )}
       </main>
